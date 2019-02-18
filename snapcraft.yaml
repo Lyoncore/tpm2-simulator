@@ -716,5 +716,6 @@ parts:
       - python3-twisted
       - gnutls-dev
       - gnutls-bin
+      - gawk
     after:
       - libtpms
