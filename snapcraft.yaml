@@ -28,7 +28,7 @@ apps:
     slots: [tpm2-abrmd-dbus]
   swtpm:
     command: bin/swtpm
-    plugs: [tpm, network, home]
+    plugs: [tpm, network-bind, home]
   activatecredential:
     command: bin/tpm2_activatecredential
     plugs: [tpm, network, home]
