@@ -719,3 +719,5 @@ parts:
       - gawk
     after:
       - libtpms
+    organize:
+      - usr/lib/swtpm/* : usr/lib/
