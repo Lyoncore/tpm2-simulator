@@ -56,3 +56,24 @@ export TPM2TOOLS_TCTI=device:/dev/tpmrm0 and run commands `sudo -E` will work to
 ### Example on Extended Authorization (EA) Policies
 
 check test_eapolicy.sh in the repo.
+
+### Example to test swtpm with KVM/QEMU
+
+Run swtpm separately:
+$ mkdir -p $HOME/tpm1
+$ tpm2-simulator.swtpm socket --tpmstate dir=$HOME/tpm1 --tpm2 --ctrl type=unixio,path=$HOME/tpm1.sock
+
+Make sure you login user is in the kvm group:
+$ sudo adduser `id -un` kvm
+You need logout to make the change or you can use `newgrp` to change the group in current login session
+$ newgrp kvm
+
+Run kvm with tpm as chardev:
+$ kvm -smp 2 -m 512 \
+  -net user -net nic -redir tcp:8022::22 \
+  -smbios type=1,serial=1234567 \
+  -device nec-usb-xhci,id=xhci -device usb-storage,bus=xhci.0,drive=stick,removable=on \
+  -drive if=pflash,format=raw,readonly,file=$PWD/OVMF_CODE.fd \
+  -drive if=none,id=stick,format=raw,file=tottori-uc18-alpha-20190219.img \
+  -chardev socket,id=chrtpm,path=$HOME/tpm1.sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0 \
+  -hda testdisk.raw -nographic
