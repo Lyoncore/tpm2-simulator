@@ -720,4 +720,4 @@ parts:
     after:
       - libtpms
     organize:
-      usr/lib/swtpm/*: usr/lib/
+      lib/swtpm/*: lib/
